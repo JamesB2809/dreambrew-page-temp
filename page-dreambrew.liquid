@@ -1,0 +1,848 @@
+{%- comment -%}
+  DreamBrew landing page section.
+  Built from Figma "Frame 1168". Mobile-first 600px max content column,
+  expands to 720px on desktop. Uses theme header & footer.
+{%- endcomment -%}
+
+{%- liquid
+  assign starter = all_products[section.settings.product_12_handle]
+  assign dream   = all_products[section.settings.product_24_handle]
+-%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+{% style %}
+  .db {
+    --db-pink: #d24c7f;
+    --db-pink-dark: #c8215d;
+    --db-brown: #402a11;
+    --db-yellow: #ffde17;
+    --db-cream: #fff6e3;
+    --db-cream-rot: #f9e8d4;
+    --db-grey: #c8c8c8;
+    --db-red: #f44336;
+    font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+    color: var(--db-brown);
+    line-height: 1.4;
+    overflow-x: hidden;
+  }
+  .db * { box-sizing: border-box; }
+  .db__wrap { max-width: 600px; margin: 0 auto; padding: 0 16px; }
+  .db__wrap--wide { max-width: 720px; }
+
+  /* Top pink banner */
+  .db__banner { background: var(--db-pink); padding: 18px 16px; text-align: center; }
+  .db__banner img { height: 32px; width: auto; }
+
+  /* Hero */
+  .db__hero { position: relative; padding: 56px 16px 24px; text-align: center; overflow: hidden; }
+  .db__hero-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+  .db__hero-bg img { width: 100%; height: 100%; object-fit: cover; }
+  .db__hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, #fff 0%, rgba(255,255,255,0) 55%); }
+  .db__hero-inner { position: relative; z-index: 1; }
+  .db__h1 { font-weight: 900; font-size: clamp(34px, 8vw, 48px); line-height: 1; letter-spacing: -0.04em; text-transform: uppercase; margin: 0 0 16px; }
+  .db__h1 .accent { display: block; color: var(--db-pink); }
+  .db__hero-sub { font-size: clamp(16px, 4.5vw, 21px); max-width: 510px; margin: 0 auto 32px; }
+  .db__hero-sub b, .db__hero-sub strong { font-weight: 700; }
+
+  /* Feature pills row */
+  .db__features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 460px; margin: 0 auto 28px; }
+  .db__feature { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; font-weight: 500; font-size: clamp(14px, 3.8vw, 18px); }
+  .db__feature-icon { width: 56px; height: 48px; display: grid; place-items: center; }
+  .db__feature-icon svg { width: 42px; height: 36px; }
+
+  /* Big CTA pill */
+  .db__cta { display: inline-flex; align-items: center; justify-content: center; width: 100%; max-width: 540px; min-height: 76px; padding: 18px 32px; border-radius: 999px; background: var(--db-pink); color: #fff; font-weight: 700; font-size: clamp(22px, 5vw, 30px); text-transform: uppercase; text-decoration: none; border: 2px solid var(--db-brown); box-shadow: 0 6px 6px rgba(0,0,0,0.09), 0 13px 8px rgba(0,0,0,0.05); transition: transform .15s ease; }
+  .db__cta:hover { transform: translateY(-1px); color: #fff; }
+  .db__cta--small { min-height: 52px; max-width: 320px; padding: 14px 24px; font-size: 18px; }
+  .db__cta--solid { box-shadow: 3px 4px 0 var(--db-brown); }
+
+  /* Reassurance line */
+  .db__reassure { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 16px 0 28px; font-weight: 500; font-size: 18px; }
+  .db__reassure svg { color: var(--db-pink); width: 28px; height: 24px; flex: 0 0 auto; }
+
+  /* Money-given pill */
+  .db__money-pill { display: inline-flex; align-items: center; gap: 8px; background: var(--db-pink-dark); color: #fff; padding: 10px 18px; border-radius: 999px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.03em; font-size: 16px; margin: 24px auto; }
+  .db__money-pill svg { width: 20px; height: 20px; }
+
+  /* Cream rotated panel sections */
+  .db__cream-panel { position: relative; padding: 80px 16px 64px; text-align: center; }
+  .db__cream-panel::before { content: ''; position: absolute; inset: 24px -20px; background: var(--db-cream-rot); transform: rotate(-3.34deg); z-index: 0; }
+  .db__cream-panel > * { position: relative; z-index: 1; }
+  .db__h2 { font-weight: 900; font-size: clamp(28px, 7vw, 40px); line-height: 1; letter-spacing: -0.04em; text-transform: uppercase; margin: 0 0 28px; }
+  .db__h2 .accent { display: block; color: var(--db-pink); }
+  .db__h2 .accent-inline { color: var(--db-pink); }
+
+  /* Testimonial carousel */
+  .db__carousel { position: relative; margin: 0 -16px; }
+  .db__carousel-track { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 24px 16px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .db__carousel-track::-webkit-scrollbar { display: none; }
+  .db__card { flex: 0 0 78%; max-width: 382px; scroll-snap-align: center; background: #fff; border: 1px solid var(--db-pink); border-radius: 10px; box-shadow: 0 4px 4px rgba(0,0,0,0.25); overflow: hidden; text-align: left; }
+  .db__card-img { aspect-ratio: 380 / 247; background: #a87777; }
+  .db__card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .db__card-body { padding: 24px; }
+  .db__card-title { font-weight: 700; font-size: 20px; letter-spacing: -0.03em; text-transform: capitalize; margin: 0 0 12px; }
+  .db__card-text { font-size: 16px; line-height: 1.45; margin: 0 0 20px; }
+  .db__card-tag { display: inline-flex; align-items: center; gap: 8px; background: var(--db-yellow); padding: 8px 14px; border-radius: 999px; font-weight: 600; font-size: 16px; }
+  .db__card-tag svg { width: 20px; height: 20px; color: var(--db-brown); }
+  .db__carousel-nav { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 16px 0 0; }
+  .db__carousel-nav button { width: 38px; height: 38px; border-radius: 50%; border: none; background: var(--db-pink); color: #fff; display: grid; place-items: center; cursor: pointer; }
+  .db__carousel-dots { background: var(--db-yellow); border-radius: 999px; padding: 6px 14px; display: inline-flex; gap: 6px; align-items: center; height: 28px; }
+  .db__carousel-dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--db-brown); opacity: 0.3; transition: opacity .2s; }
+  .db__carousel-dots span.is-active { opacity: 1; }
+
+  /* Coffee strip divider */
+  .db__strip { width: 100%; height: 64px; object-fit: cover; display: block; }
+
+  /* Checklist */
+  .db__checklist { list-style: none; padding: 0; margin: 0 auto; max-width: 480px; display: flex; flex-direction: column; gap: 24px; }
+  .db__checklist li { display: flex; align-items: center; gap: 18px; font-size: clamp(18px, 5vw, 27px); }
+  .db__check-circle { flex: 0 0 40px; width: 40px; height: 40px; border-radius: 50%; background: var(--db-yellow); display: grid; place-items: center; }
+  .db__check-circle svg { width: 24px; height: 24px; color: var(--db-brown); }
+
+  /* Product image card */
+  .db__product-hero { border: 2px solid var(--db-brown); border-radius: 8px; box-shadow: 3px 3px 0 var(--db-brown); overflow: hidden; max-width: 488px; margin: 24px auto; aspect-ratio: 488 / 402; background: #f5f5f5; }
+  .db__product-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .db__thumb-row { display: flex; gap: 9px; justify-content: center; margin: 16px 0 28px; }
+  .db__thumb { width: 64px; height: 64px; border: 1.5px solid rgba(64,42,17,0.16); border-radius: 8px; overflow: hidden; cursor: pointer; background: #fff; padding: 0; }
+  .db__thumb.is-active { border-color: var(--db-brown); }
+  .db__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* Section subhead label */
+  .db__label { font-weight: 900; font-size: 21px; text-transform: uppercase; margin: 0 0 18px; max-width: 488px; margin-inline: auto; text-align: left; }
+
+  /* Flavor selector */
+  .db__flavors { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; max-width: 360px; margin: 0 auto 32px; }
+  .db__flavor { background: none; padding: 0; border: 0; cursor: pointer; text-align: center; }
+  .db__flavor-card { border: 2px solid var(--db-grey); border-radius: 8px; box-shadow: 3px 3px 0 var(--db-brown); background: #fff; overflow: hidden; aspect-ratio: 150 / 146; position: relative; display: flex; flex-direction: column; justify-content: flex-end; }
+  .db__flavor-card img { width: 60%; height: 70%; object-fit: contain; align-self: center; margin-top: 8px; }
+  .db__flavor-label { background: var(--db-grey); color: #fff; padding: 10px 6px; font-weight: 900; font-size: 11px; text-transform: uppercase; }
+  .db__flavor.is-active .db__flavor-card { border-color: var(--db-yellow); }
+  .db__flavor.is-active .db__flavor-label { background: var(--db-yellow); color: var(--db-brown); }
+
+  /* Pricing card */
+  .db__pricing { background: var(--db-cream); border: 2px solid var(--db-brown); border-radius: 10px; box-shadow: 4px 4px 0 var(--db-brown); padding: 28px 22px; max-width: 488px; margin: 0 auto; }
+  .db__pricing-title { font-weight: 900; font-size: 19px; text-transform: uppercase; margin: 0 0 16px; }
+  .db__tier { background: #fff; border: 1px solid var(--db-brown); border-radius: 24px; padding: 16px 20px 16px 50px; margin-bottom: 14px; cursor: pointer; position: relative; display: block; }
+  .db__tier input { position: absolute; opacity: 0; pointer-events: none; }
+  .db__tier::before { content: ''; position: absolute; left: 18px; top: 50%; transform: translateY(-50%); width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--db-brown); background: #fff; }
+  .db__tier.is-active::before { background: radial-gradient(circle, var(--db-pink) 40%, #fff 45%); }
+  .db__tier-name { font-weight: 900; font-size: 17px; text-transform: uppercase; margin: 0 0 4px; }
+  .db__tier-price { font-size: 17px; font-weight: 700; }
+  .db__tier-price s { font-weight: 400; opacity: 0.65; margin-left: 6px; font-size: 15px; }
+  .db__tier-perday { display: block; font-weight: 700; font-size: 14px; margin-top: 4px; }
+
+  .db__perks { list-style: none; padding: 0; margin: 24px 0 28px; display: flex; flex-direction: column; gap: 14px; }
+  .db__perks li { display: flex; align-items: center; gap: 12px; font-size: 17px; }
+  .db__perks svg { width: 18px; height: 18px; color: var(--db-brown); flex: 0 0 auto; }
+  .db__perks b { font-weight: 700; }
+
+  .db__pricing .db__cta { width: 100%; min-height: 64px; font-size: 22px; box-shadow: 3px 4px 0 var(--db-brown); }
+
+  /* One-time card */
+  .db__onetime { background: rgba(255,246,227,0); border: 1px solid var(--db-brown); border-radius: 8px; padding: 18px 22px; max-width: 488px; margin: 24px auto 32px; }
+  .db__onetime h3 { font-weight: 900; font-size: 17px; text-transform: uppercase; margin: 0 0 6px; }
+  .db__onetime .price { font-weight: 700; font-size: 17px; }
+  .db__onetime .price s { font-weight: 400; opacity: 0.65; margin-left: 6px; font-size: 15px; }
+  .db__onetime p { margin: 6px 0 0; font-weight: 700; font-size: 14px; }
+
+  /* Tastes Like */
+  .db__tastes { display: flex; gap: 32px; justify-content: center; margin: 28px 0 48px; }
+  .db__taste { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .db__taste-bubble { width: 67px; height: 67px; background: var(--db-pink); border-radius: 50%; display: grid; place-items: center; transform: rotate(-8.5deg); }
+  .db__taste-bubble svg { width: 34px; height: 34px; color: #fff; }
+  .db__taste-name { font-weight: 700; font-size: 18px; }
+
+  /* Comparison table */
+  .db__compare-wrap { background: var(--db-cream); border: 1.5px solid var(--db-brown); border-radius: 8px; box-shadow: 3px 3px 0 var(--db-brown); padding: 24px 12px; max-width: 488px; margin: 24px auto; position: relative; }
+  .db__compare-table { width: 100%; border-collapse: collapse; position: relative; z-index: 1; }
+  .db__compare-table th, .db__compare-table td { padding: 14px 4px; text-align: center; font-weight: 700; font-size: 13px; vertical-align: middle; border-bottom: 1px solid var(--db-brown); }
+  .db__compare-table th:first-child, .db__compare-table td:first-child { text-align: left; padding-left: 8px; }
+  .db__compare-table tr:last-child td { border-bottom: 0; }
+  .db__compare-col-db { background: var(--db-yellow); position: relative; }
+  .db__compare-table .db-logo-cell { padding-top: 12px; padding-bottom: 12px; }
+  .db__compare-table .db-logo-cell img { height: 28px; width: auto; }
+  .db__compare-table svg { width: 16px; height: 16px; vertical-align: middle; }
+  .db__compare-table .check { color: var(--db-brown); }
+  .db__compare-table .x { color: var(--db-red); }
+
+  /* Big image */
+  .db__big-img { width: 100%; aspect-ratio: 509 / 400; background: #5f5f5f; margin: 32px 0; overflow: hidden; }
+  .db__big-img img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* CTA section */
+  .db__cta-block { padding: 32px 16px 40px; text-align: center; }
+  .db__cta-block h2 { font-weight: 900; font-size: clamp(28px, 7vw, 40px); line-height: 1.05; letter-spacing: -0.04em; margin: 0 0 16px; }
+  .db__cta-block .accent { color: var(--db-pink); }
+  .db__cta-block p { font-size: 20px; line-height: 1.4; max-width: 460px; margin: 0 auto 24px; }
+  .db__cta-block p b { font-weight: 700; }
+
+  /* FAQ */
+  .db__faq { max-width: 488px; margin: 0 auto; padding: 24px 16px 32px; }
+  .db__faq h2 { font-weight: 900; font-size: 30px; text-transform: uppercase; text-align: center; margin: 0 0 28px; }
+  .db__faq-item { background: #fff; border: 1px solid var(--db-brown); border-radius: 5px; box-shadow: 2px 2px 0 var(--db-brown); margin-bottom: 16px; }
+  .db__faq-q { width: 100%; background: none; border: 0; padding: 18px 50px 18px 22px; font-weight: 900; font-size: 14px; text-align: left; cursor: pointer; position: relative; color: var(--db-brown); }
+  .db__faq-q::after { content: ''; position: absolute; right: 22px; top: 50%; width: 12px; height: 12px; border-right: 2px solid var(--db-brown); border-bottom: 2px solid var(--db-brown); transform: translateY(-75%) rotate(45deg); transition: transform .2s; }
+  .db__faq-item.is-open .db__faq-q::after { transform: translateY(-25%) rotate(-135deg); }
+  .db__faq-a { padding: 0 22px; max-height: 0; overflow: hidden; transition: max-height .25s ease, padding .25s ease; font-size: 12px; line-height: 1.45; }
+  .db__faq-item.is-open .db__faq-a { padding: 0 22px 18px; max-height: 800px; }
+  .db__faq-a ul { padding-left: 18px; margin: 6px 0; }
+
+  .db__faq + .db__center-cta { padding: 8px 16px 40px; text-align: center; }
+
+  /* Dark closer banner */
+  .db__closer { position: relative; padding: 48px 16px; text-align: center; color: #fff; overflow: hidden; }
+  .db__closer-bg { position: absolute; inset: 0; background: rgba(41,25,7,0.84); z-index: 0; }
+  .db__closer-bg img { width: 100%; height: 100%; object-fit: cover; }
+  .db__closer h2 { position: relative; z-index: 1; font-weight: 700; font-size: clamp(22px, 6vw, 28px); margin: 0; line-height: 1.2; }
+
+  /* Sticky add-to-cart helper hidden by default — can be unhidden with section setting */
+  .db__sticky-cart { display: none; }
+
+  @media (min-width: 768px) {
+    .db__hero { padding: 80px 24px 32px; }
+    .db__cream-panel { padding: 96px 24px 80px; }
+    .db__cream-panel::before { inset: 32px -40px; }
+  }
+{% endstyle %}
+
+<div class="db" data-section-id="{{ section.id }}">
+
+  {%- if section.settings.show_top_banner -%}
+    <div class="db__banner">
+      {% if section.settings.banner_logo != blank %}
+        <img src="{{ section.settings.banner_logo | image_url: width: 220 }}" alt="Dream Brew" loading="eager">
+      {% else %}
+        <strong style="color:#fff;letter-spacing:0.2em;text-transform:uppercase;">Dream Brew</strong>
+      {% endif %}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ============== HERO ============== {%- endcomment -%}
+  <section class="db__hero">
+    {% if section.settings.hero_bg != blank %}
+      <div class="db__hero-bg"><img src="{{ section.settings.hero_bg | image_url: width: 1200 }}" alt="" loading="eager"></div>
+    {% endif %}
+    <div class="db__hero-inner">
+      <h1 class="db__h1">
+        {{ section.settings.hero_heading_1 }}
+        <span class="accent">{{ section.settings.hero_heading_2 }}</span>
+      </h1>
+      <p class="db__hero-sub">{{ section.settings.hero_subhead }}</p>
+
+      <div class="db__features">
+        {% for i in (1..3) %}
+          {%- assign t = 'hero_feature_' | append: i | append: '_text' -%}
+          <div class="db__feature">
+            <div class="db__feature-icon">
+              <svg viewBox="0 0 42 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M3 4 C3 1, 5 1, 8 1 L34 1 C37 1, 39 3, 39 6 L39 24 C39 30, 33 35, 21 35 C9 35, 3 30, 3 24 Z" stroke="#d24c7f" stroke-width="2.5" fill="none"/>
+              </svg>
+            </div>
+            <span>{{ section.settings[t] }}</span>
+          </div>
+        {% endfor %}
+      </div>
+
+      <a href="{{ section.settings.hero_cta_url }}" class="db__cta">{{ section.settings.hero_cta_label }}</a>
+
+      <p class="db__reassure">
+        <svg viewBox="0 0 30 26" fill="currentColor" aria-hidden="true"><path d="M15 0 L19 9 L29 10 L21 17 L24 26 L15 21 L6 26 L9 17 L1 10 L11 9 Z"/></svg>
+        {{ section.settings.guarantee_text }}
+      </p>
+    </div>
+  </section>
+
+  {%- comment -%} ============== TESTIMONIAL CARDS ============== {%- endcomment -%}
+  <section class="db__cream-panel">
+    <h2 class="db__h2">
+      {{ section.settings.testi_heading_1 }}
+      <span class="accent">{{ section.settings.testi_heading_2 }}</span>
+    </h2>
+
+    <div class="db__money-pill">
+      <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 17.5l-1.5-1.4C3.4 11.6 0 8.6 0 4.9 0 2 2.2 0 5 0c1.6 0 3 .7 4 1.9C10 .7 11.5 0 13 0c2.8 0 5 2 5 4.9 0 3.7-3.4 6.7-8.5 11.2L10 17.5z"/></svg>
+      {{ section.settings.money_pill_text }}
+    </div>
+
+    <div class="db__carousel" data-db-carousel>
+      <div class="db__carousel-track">
+        {% for block in section.blocks %}
+          {% if block.type == 'testimonial' %}
+            <article class="db__card" {{ block.shopify_attributes }}>
+              <div class="db__card-img">
+                {% if block.settings.image != blank %}
+                  <img src="{{ block.settings.image | image_url: width: 800 }}" alt="{{ block.settings.title | escape }}" loading="lazy">
+                {% endif %}
+              </div>
+              <div class="db__card-body">
+                <h3 class="db__card-title">{{ block.settings.title }}</h3>
+                <p class="db__card-text">{{ block.settings.text }}</p>
+                <span class="db__card-tag">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M8 12l3 3 5-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  {{ block.settings.tag }}
+                </span>
+              </div>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="db__carousel-nav">
+        <button type="button" data-db-prev aria-label="Previous">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2 L4 7 L9 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="db__carousel-dots" data-db-dots></div>
+        <button type="button" data-db-next aria-label="Next">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2 L10 7 L5 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  {%- comment -%} ============== STRIP ============== {%- endcomment -%}
+  {% if section.settings.strip_image != blank %}
+    <img class="db__strip" src="{{ section.settings.strip_image | image_url: width: 1200 }}" alt="" loading="lazy">
+  {% endif %}
+
+  {%- comment -%} ============== CHECKLIST ============== {%- endcomment -%}
+  <section class="db__cream-panel" style="background: transparent;">
+    <h2 class="db__h2">
+      {{ section.settings.check_heading_1 }}
+      <span class="accent">{{ section.settings.check_heading_2 }}</span>
+    </h2>
+    <ul class="db__checklist">
+      {% for block in section.blocks %}
+        {% if block.type == 'check_item' %}
+          <li {{ block.shopify_attributes }}>
+            <span class="db__check-circle">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12 L10 17 L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            {{ block.settings.text }}
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </section>
+
+  {%- comment -%} ============== START CHASING / PRODUCT BUILDER ============== {%- endcomment -%}
+  <section class="db__wrap--wide" style="padding: 32px 16px 64px; text-align: center;">
+    <h2 class="db__h2">
+      {{ section.settings.builder_heading_1 }}
+      <span class="accent-inline">{{ section.settings.builder_heading_2 }}</span>
+    </h2>
+
+    <div class="db__product-hero">
+      {% if section.settings.product_hero_image != blank %}
+        <img src="{{ section.settings.product_hero_image | image_url: width: 1000 }}" alt="">
+      {% elsif starter.featured_image %}
+        <img src="{{ starter.featured_image | image_url: width: 1000 }}" alt="{{ starter.title | escape }}">
+      {% endif %}
+    </div>
+
+    {% if section.settings.thumb_1 != blank or section.settings.thumb_2 != blank or section.settings.thumb_3 != blank or section.settings.thumb_4 != blank %}
+      <div class="db__thumb-row">
+        {% for i in (1..4) %}
+          {%- assign tk = 'thumb_' | append: i -%}
+          {% if section.settings[tk] != blank %}
+            <button type="button" class="db__thumb {% if i == 1 %}is-active{% endif %}" data-db-thumb="{{ i }}">
+              <img src="{{ section.settings[tk] | image_url: width: 200 }}" alt="">
+            </button>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <p class="db__label">{{ section.settings.flavor_label }}</p>
+    <div class="db__flavors" role="radiogroup" aria-label="Flavor">
+      <button type="button" class="db__flavor is-active" data-db-flavor="purpose" role="radio" aria-checked="true">
+        <div class="db__flavor-card">
+          {% if section.settings.flavor_purpose_image != blank %}
+            <img src="{{ section.settings.flavor_purpose_image | image_url: width: 240 }}" alt="">
+          {% endif %}
+          <div class="db__flavor-label">{{ section.settings.flavor_purpose_label }}</div>
+        </div>
+      </button>
+      <button type="button" class="db__flavor" data-db-flavor="focus" role="radio" aria-checked="false">
+        <div class="db__flavor-card">
+          {% if section.settings.flavor_focus_image != blank %}
+            <img src="{{ section.settings.flavor_focus_image | image_url: width: 240 }}" alt="">
+          {% endif %}
+          <div class="db__flavor-label">{{ section.settings.flavor_focus_label }}</div>
+        </div>
+      </button>
+    </div>
+
+    {%- comment -%} ============== PRICING / AUTOSHIP ============== {%- endcomment -%}
+    <div class="db__pricing">
+      <h3 class="db__pricing-title">{{ section.settings.pricing_heading }}</h3>
+
+      <label class="db__tier is-active" data-db-tier="12">
+        <input type="radio" name="db-tier" value="12" checked>
+        <span class="db__tier-name">{{ section.settings.tier_12_name }}</span>
+        <span class="db__tier-price">
+          {{ section.settings.tier_12_price }}
+          <s>{{ section.settings.tier_12_compare }}</s>
+        </span>
+        <span class="db__tier-perday">{{ section.settings.tier_12_perday }}</span>
+      </label>
+
+      <label class="db__tier" data-db-tier="24">
+        <input type="radio" name="db-tier" value="24">
+        <span class="db__tier-name">{{ section.settings.tier_24_name }}</span>
+        <span class="db__tier-price">
+          {{ section.settings.tier_24_price }}
+          <s>{{ section.settings.tier_24_compare }}</s>
+        </span>
+        <span class="db__tier-perday">{{ section.settings.tier_24_perday }}</span>
+      </label>
+
+      <ul class="db__perks">
+        {% for i in (1..4) %}
+          {%- assign p = 'perk_' | append: i -%}
+          {% if section.settings[p] != blank %}
+            <li>
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="2"/><path d="M5 9l3 3 5-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              {{ section.settings[p] }}
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+
+      <button type="button" class="db__cta db__cta--solid" data-db-add>{{ section.settings.add_cta_label }}</button>
+    </div>
+
+    {%- comment -%} ============== ONE-TIME CARD ============== {%- endcomment -%}
+    <div class="db__onetime">
+      <h3>{{ section.settings.onetime_heading }}</h3>
+      <div class="price">
+        {{ section.settings.onetime_price }}
+        {% if section.settings.onetime_compare != blank %}<s>{{ section.settings.onetime_compare }}</s>{% endif %}
+      </div>
+      {% if section.settings.onetime_note != blank %}<p>{{ section.settings.onetime_note }}</p>{% endif %}
+    </div>
+
+    {%- comment -%} ============== TASTES LIKE ============== {%- endcomment -%}
+    <p style="font-weight:700;font-size:17px;margin:8px 0 0;">{{ section.settings.tastes_heading }}</p>
+    <div class="db__tastes">
+      {% for i in (1..3) %}
+        {%- assign tn = 'taste_' | append: i | append: '_name' -%}
+        {%- assign ti = 'taste_' | append: i | append: '_icon' -%}
+        <div class="db__taste">
+          <div class="db__taste-bubble">
+            {% case section.settings[ti] %}
+              {% when 'snowflake' %}
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M4 6l16 12M4 18L20 6M2 12h20" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+              {% when 'drop' %}
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-3 5-7 9-7 13a7 7 0 0014 0c0-4-4-8-7-13z"/></svg>
+              {% else %}
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
+            {% endcase %}
+          </div>
+          <span class="db__taste-name">{{ section.settings[tn] }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  {%- comment -%} ============== COMPARISON TABLE ============== {%- endcomment -%}
+  <section class="db__cream-panel" style="background: transparent; padding-top: 32px;">
+    <h2 class="db__h2">
+      {{ section.settings.compare_heading_1 }}
+      <span class="accent">{{ section.settings.compare_heading_2 }}</span>
+      {{ section.settings.compare_heading_3 }}
+    </h2>
+
+    <div class="db__compare-wrap">
+      <table class="db__compare-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="db__compare-col-db db-logo-cell">
+              {% if section.settings.compare_db_logo != blank %}
+                <img src="{{ section.settings.compare_db_logo | image_url: width: 160 }}" alt="Dream Brew">
+              {% else %}
+                Dream Brew
+              {% endif %}
+            </th>
+            <th>{{ section.settings.compare_col_2 }}</th>
+            <th>{{ section.settings.compare_col_3 }}</th>
+            <th>{{ section.settings.compare_col_4 }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for block in section.blocks %}
+            {% if block.type == 'compare_row' %}
+              <tr {{ block.shopify_attributes }}>
+                <td>{{ block.settings.label }}</td>
+                {% for col in (1..4) %}
+                  {%- assign ck = 'col_' | append: col -%}
+                  <td {% if col == 1 %}class="db__compare-col-db"{% endif %}>
+                    {% case block.settings[ck] %}
+                      {% when 'check' %}
+                        <svg class="check" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M8 12l3 3 5-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      {% when 'question' %}
+                        <svg class="x" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><text x="12" y="17" text-anchor="middle" font-size="14" fill="#fff" font-weight="900">?</text></svg>
+                      {% when 'x' %}
+                        <svg class="x" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><path d="M8 8l8 8M16 8l-8 8" stroke="#fff" stroke-width="2.5"/></svg>
+                      {% else %}
+                        —
+                    {% endcase %}
+                  </td>
+                {% endfor %}
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if section.settings.compare_image != blank %}
+      <div class="db__big-img"><img src="{{ section.settings.compare_image | image_url: width: 1200 }}" alt=""></div>
+    {% endif %}
+
+    <a href="{{ section.settings.get_cta_url }}" class="db__cta db__cta--small db__cta--solid">{{ section.settings.get_cta_label }}</a>
+  </section>
+
+  {%- comment -%} ============== FUND-A-DREAM CTA ============== {%- endcomment -%}
+  <section class="db__cta-block">
+    <h2>
+      {{ section.settings.fund_heading_1 }}
+      <span class="accent">{{ section.settings.fund_heading_2 }}</span>
+    </h2>
+    <p>{{ section.settings.fund_body }}</p>
+    <a href="{{ section.settings.fund_cta_url }}" class="db__cta db__cta--small db__cta--solid">{{ section.settings.fund_cta_label }}</a>
+  </section>
+
+  {%- comment -%} ============== FAQ ============== {%- endcomment -%}
+  <section class="db__faq">
+    <h2>{{ section.settings.faq_heading }}</h2>
+    {% for block in section.blocks %}
+      {% if block.type == 'faq' %}
+        <div class="db__faq-item" {{ block.shopify_attributes }} data-db-faq>
+          <button class="db__faq-q" type="button">{{ block.settings.question }}</button>
+          <div class="db__faq-a">{{ block.settings.answer }}</div>
+        </div>
+      {% endif %}
+    {% endfor %}
+    <div class="db__center-cta" style="text-align:center;margin-top:24px;">
+      <button type="button" class="db__cta db__cta--small db__cta--solid" data-db-add>{{ section.settings.cart_cta_label }}</button>
+    </div>
+  </section>
+
+  {%- comment -%} ============== CLOSER BANNER ============== {%- endcomment -%}
+  <section class="db__closer">
+    {% if section.settings.closer_bg != blank %}
+      <div class="db__closer-bg"><img src="{{ section.settings.closer_bg | image_url: width: 1200 }}" alt=""></div>
+    {% else %}
+      <div class="db__closer-bg" style="background: var(--db-brown);"></div>
+    {% endif %}
+    <h2>
+      {{ section.settings.closer_line_1 }}<br>
+      {{ section.settings.closer_line_2 }}
+    </h2>
+  </section>
+
+  {%- comment -%} ============== HIDDEN PRODUCT FORM ============== {%- endcomment -%}
+  <form id="db-cart-form-{{ section.id }}" action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" hidden>
+    <input type="hidden" name="id" data-db-variant value="">
+    <input type="hidden" name="quantity" value="1">
+  </form>
+
+</div>
+
+{%- comment -%} ============== VARIANT MAP (Liquid → JS) ============== {%- endcomment -%}
+<script>
+(function () {
+  var section = document.querySelector('[data-section-id="{{ section.id }}"]');
+  if (!section) return;
+
+  // Variant lookup: { tier (12|24): { flavor (purpose|focus): variantId } }
+  var VARIANTS = {
+    "12": {
+      "purpose": {{ starter.variants | where: 'title', 'PURPOSE COFFEE' | map: 'id' | first | default: starter.variants.first.id | json }},
+      "focus":   {{ starter.variants | where: 'title', 'FOCUS COFFEE'   | map: 'id' | first | default: starter.variants.first.id | json }}
+    },
+    "24": {
+      "purpose": {{ dream.variants   | where: 'title', 'PURPOSE COFFEE' | map: 'id' | first | default: dream.variants.first.id   | json }},
+      "focus":   {{ dream.variants   | where: 'title', 'FOCUS COFFEE'   | map: 'id' | first | default: dream.variants.first.id   | json }}
+    }
+  };
+
+  var state = { tier: "12", flavor: "purpose" };
+
+  // Flavor toggle
+  section.querySelectorAll('[data-db-flavor]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      state.flavor = btn.getAttribute('data-db-flavor');
+      section.querySelectorAll('[data-db-flavor]').forEach(function (b) {
+        var on = b === btn;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-checked', on);
+      });
+    });
+  });
+
+  // Tier toggle
+  section.querySelectorAll('[data-db-tier]').forEach(function (lbl) {
+    lbl.addEventListener('click', function () {
+      state.tier = lbl.getAttribute('data-db-tier');
+      section.querySelectorAll('[data-db-tier]').forEach(function (l) {
+        l.classList.toggle('is-active', l === lbl);
+      });
+      var input = lbl.querySelector('input');
+      if (input) input.checked = true;
+    });
+  });
+
+  // Thumb gallery (just visual swap of hero image)
+  var heroImg = section.querySelector('.db__product-hero img');
+  section.querySelectorAll('[data-db-thumb]').forEach(function (t) {
+    t.addEventListener('click', function () {
+      section.querySelectorAll('[data-db-thumb]').forEach(function (x) { x.classList.remove('is-active'); });
+      t.classList.add('is-active');
+      var img = t.querySelector('img');
+      if (heroImg && img) heroImg.src = img.src.replace(/width=\d+/, 'width=1000');
+    });
+  });
+
+  // FAQ accordion
+  section.querySelectorAll('[data-db-faq]').forEach(function (item) {
+    item.querySelector('.db__faq-q').addEventListener('click', function () {
+      item.classList.toggle('is-open');
+    });
+  });
+
+  // Carousel
+  var car = section.querySelector('[data-db-carousel]');
+  if (car) {
+    var track = car.querySelector('.db__carousel-track');
+    var dots = car.querySelector('[data-db-dots]');
+    var cards = track.querySelectorAll('.db__card');
+    cards.forEach(function (_, i) {
+      var d = document.createElement('span');
+      if (i === 0) d.classList.add('is-active');
+      dots.appendChild(d);
+    });
+    function scrollByCard(dir) {
+      var card = track.querySelector('.db__card');
+      if (!card) return;
+      track.scrollBy({ left: dir * (card.offsetWidth + 16), behavior: 'smooth' });
+    }
+    car.querySelector('[data-db-prev]').addEventListener('click', function () { scrollByCard(-1); });
+    car.querySelector('[data-db-next]').addEventListener('click', function () { scrollByCard(1); });
+    track.addEventListener('scroll', function () {
+      var i = Math.round(track.scrollLeft / (track.querySelector('.db__card').offsetWidth + 16));
+      dots.querySelectorAll('span').forEach(function (s, idx) { s.classList.toggle('is-active', idx === i); });
+    });
+  }
+
+  // Add to cart
+  section.querySelectorAll('[data-db-add]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var vid = (VARIANTS[state.tier] || {})[state.flavor];
+      if (!vid) {
+        alert('Sorry, that combination is not available.');
+        return;
+      }
+      btn.disabled = true;
+      var origLabel = btn.textContent;
+      btn.textContent = 'Adding…';
+      fetch('{{ routes.cart_add_url }}.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ items: [{ id: vid, quantity: 1 }] })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function () { window.location.href = '{{ routes.cart_url }}'; })
+        .catch(function () {
+          btn.disabled = false;
+          btn.textContent = origLabel;
+          alert('Could not add to cart. Please try again.');
+        });
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "DreamBrew Page",
+  "settings": [
+    { "type": "header", "content": "Top banner" },
+    { "type": "checkbox", "id": "show_top_banner", "label": "Show top pink banner with logo", "default": true },
+    { "type": "image_picker", "id": "banner_logo", "label": "Banner logo (white PNG)" },
+
+    { "type": "header", "content": "Hero" },
+    { "type": "image_picker", "id": "hero_bg", "label": "Hero background image" },
+    { "type": "text", "id": "hero_heading_1", "label": "Heading line 1", "default": "Great coffee that" },
+    { "type": "text", "id": "hero_heading_2", "label": "Heading line 2 (pink)", "default": "funds dreams" },
+    { "type": "richtext", "id": "hero_subhead", "label": "Sub-headline", "default": "<p>Your coffee can do something bigger. <b>A portion of all profits fund real entrepreneurs through the Dream Fund.</b></p>" },
+    { "type": "text", "id": "hero_feature_1_text", "label": "Feature 1", "default": "Real Coffee Taste" },
+    { "type": "text", "id": "hero_feature_2_text", "label": "Feature 2", "default": "Funds Dreams" },
+    { "type": "text", "id": "hero_feature_3_text", "label": "Feature 3", "default": "From £1.45 A Can" },
+    { "type": "text", "id": "hero_cta_label", "label": "Hero CTA label", "default": "PRE-ORDER NOW" },
+    { "type": "url", "id": "hero_cta_url", "label": "Hero CTA URL" },
+    { "type": "text", "id": "guarantee_text", "label": "Guarantee text", "default": "Not obsessed? Get your money back" },
+
+    { "type": "header", "content": "Testimonials section" },
+    { "type": "text", "id": "testi_heading_1", "label": "Heading line 1", "default": "LET'S BREW" },
+    { "type": "text", "id": "testi_heading_2", "label": "Heading line 2 (pink)", "default": "A BETTER TOMORROW" },
+    { "type": "text", "id": "money_pill_text", "label": "Money-given pill text", "default": "£426,684+ GIVEN AWAY" },
+
+    { "type": "header", "content": "Coffee strip divider" },
+    { "type": "image_picker", "id": "strip_image", "label": "Strip image (full-width banner)" },
+
+    { "type": "header", "content": "Checklist" },
+    { "type": "text", "id": "check_heading_1", "label": "Heading line 1", "default": "DOING GOOD HAS NEVER" },
+    { "type": "text", "id": "check_heading_2", "label": "Heading line 2 (pink)", "default": "TASTED THIS GOOD" },
+
+    { "type": "header", "content": "Product builder" },
+    { "type": "text", "id": "builder_heading_1", "label": "Heading part 1", "default": "START CHASING " },
+    { "type": "text", "id": "builder_heading_2", "label": "Heading part 2 (pink)", "default": "YOUR DREAM!" },
+    { "type": "image_picker", "id": "product_hero_image", "label": "Main product image" },
+    { "type": "image_picker", "id": "thumb_1", "label": "Thumbnail 1" },
+    { "type": "image_picker", "id": "thumb_2", "label": "Thumbnail 2" },
+    { "type": "image_picker", "id": "thumb_3", "label": "Thumbnail 3" },
+    { "type": "image_picker", "id": "thumb_4", "label": "Thumbnail 4" },
+
+    { "type": "text", "id": "flavor_label", "label": "Flavor label", "default": "Select flavor :" },
+    { "type": "image_picker", "id": "flavor_purpose_image", "label": "Purpose can image" },
+    { "type": "text", "id": "flavor_purpose_label", "label": "Purpose label", "default": "Purpose Coffee" },
+    { "type": "image_picker", "id": "flavor_focus_image", "label": "Focus can image" },
+    { "type": "text", "id": "flavor_focus_label", "label": "Focus label", "default": "Focus Coffee" },
+
+    { "type": "header", "content": "Pricing — AutoShip" },
+    { "type": "text", "id": "product_12_handle", "label": "12-pack product handle", "default": "dream-brew-starter-stack-12-cans" },
+    { "type": "text", "id": "product_24_handle", "label": "24-pack product handle", "default": "dream-brew-starter-stack-24-cans" },
+    { "type": "text", "id": "pricing_heading", "label": "Pricing heading", "default": "AutoShip & save" },
+    { "type": "text", "id": "tier_12_name", "label": "Tier 1 name", "default": "Starter Stack (12 cans)" },
+    { "type": "text", "id": "tier_12_price", "label": "Tier 1 price", "default": "£19.99" },
+    { "type": "text", "id": "tier_12_compare", "label": "Tier 1 compare-at price", "default": "£23.50" },
+    { "type": "text", "id": "tier_12_perday", "label": "Tier 1 per day", "default": "£1.66 per day." },
+    { "type": "text", "id": "tier_24_name", "label": "Tier 2 name", "default": "Dream Stack (24 cans)" },
+    { "type": "text", "id": "tier_24_price", "label": "Tier 2 price", "default": "£34.98" },
+    { "type": "text", "id": "tier_24_compare", "label": "Tier 2 compare-at price", "default": "£43.75" },
+    { "type": "text", "id": "tier_24_perday", "label": "Tier 2 per day", "default": "£1.45 per day." },
+    { "type": "text", "id": "perk_1", "label": "Perk 1", "default": "12 every 4 weeks" },
+    { "type": "richtext", "id": "perk_2", "label": "Perk 2", "default": "<p><b>FAST</b> Shipping</p>" },
+    { "type": "richtext", "id": "perk_3", "label": "Perk 3", "default": "<p>Pause or cancel <b>anytime</b></p>" },
+    { "type": "richtext", "id": "perk_4", "label": "Perk 4", "default": "<p><b>30-day</b> guarantee</p>" },
+    { "type": "text", "id": "add_cta_label", "label": "Add to cart label", "default": "Start Now" },
+
+    { "type": "header", "content": "One-time purchase" },
+    { "type": "text", "id": "onetime_heading", "label": "Heading", "default": "One time purchase:" },
+    { "type": "text", "id": "onetime_price", "label": "Price", "default": "£23.99" },
+    { "type": "text", "id": "onetime_compare", "label": "Compare-at price", "default": "£24.99" },
+    { "type": "text", "id": "onetime_note", "label": "Small print", "default": "" },
+
+    { "type": "header", "content": "Tastes Like" },
+    { "type": "text", "id": "tastes_heading", "label": "Heading", "default": "Tastes Like" },
+    { "type": "text", "id": "taste_1_name", "label": "Attribute 1 name", "default": "Cold" },
+    { "type": "select", "id": "taste_1_icon", "label": "Attribute 1 icon", "options": [{"value":"snowflake","label":"Snowflake"},{"value":"drop","label":"Drop"},{"value":"star","label":"Star"}], "default": "snowflake" },
+    { "type": "text", "id": "taste_2_name", "label": "Attribute 2 name", "default": "Creamy" },
+    { "type": "select", "id": "taste_2_icon", "label": "Attribute 2 icon", "options": [{"value":"snowflake","label":"Snowflake"},{"value":"drop","label":"Drop"},{"value":"star","label":"Star"}], "default": "drop" },
+    { "type": "text", "id": "taste_3_name", "label": "Attribute 3 name", "default": "Consistent" },
+    { "type": "select", "id": "taste_3_icon", "label": "Attribute 3 icon", "options": [{"value":"snowflake","label":"Snowflake"},{"value":"drop","label":"Drop"},{"value":"star","label":"Star"}], "default": "star" },
+
+    { "type": "header", "content": "Comparison" },
+    { "type": "text", "id": "compare_heading_1", "label": "Heading part 1", "default": "The " },
+    { "type": "text", "id": "compare_heading_2", "label": "Heading part 2 (pink)", "default": "New Standard" },
+    { "type": "text", "id": "compare_heading_3", "label": "Heading part 3", "default": " for Iced Coffee" },
+    { "type": "image_picker", "id": "compare_db_logo", "label": "Dream Brew column logo" },
+    { "type": "text", "id": "compare_col_2", "label": "Column 2 header", "default": "Coffee Shop" },
+    { "type": "text", "id": "compare_col_3", "label": "Column 3 header", "default": "Budget Cans" },
+    { "type": "text", "id": "compare_col_4", "label": "Column 4 header", "default": "Energy Drink" },
+    { "type": "image_picker", "id": "compare_image", "label": "Image below table" },
+    { "type": "text", "id": "get_cta_label", "label": "CTA label", "default": "GET DREAMBREW" },
+    { "type": "url", "id": "get_cta_url", "label": "CTA URL" },
+
+    { "type": "header", "content": "Fund-a-Dream CTA" },
+    { "type": "text", "id": "fund_heading_1", "label": "Heading part 1", "default": "Try DreamBrew & " },
+    { "type": "text", "id": "fund_heading_2", "label": "Heading part 2 (pink)", "default": "Help Fund A Dream Today" },
+    { "type": "richtext", "id": "fund_body", "label": "Body", "default": "<p>When you try DreamBrew today, <b>a portion of all profits go towards helping dreams come true,</b> and you get a new daily coffee that tastes delicious and feels good.</p>" },
+    { "type": "text", "id": "fund_cta_label", "label": "CTA label", "default": "TRY DREAMBREW" },
+    { "type": "url", "id": "fund_cta_url", "label": "CTA URL" },
+
+    { "type": "header", "content": "FAQ" },
+    { "type": "text", "id": "faq_heading", "label": "FAQ heading", "default": "Frequently Asked Questions" },
+    { "type": "text", "id": "cart_cta_label", "label": "Bottom add-to-cart label", "default": "ADD TO CART" },
+
+    { "type": "header", "content": "Closer banner" },
+    { "type": "image_picker", "id": "closer_bg", "label": "Background image" },
+    { "type": "text", "id": "closer_line_1", "label": "Line 1", "default": "BREWED FOR CLARITY." },
+    { "type": "text", "id": "closer_line_2", "label": "Line 2", "default": "BUILT FOR DREAMS" }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial card",
+      "limit": 12,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Successful Cleaning business" },
+        { "type": "textarea", "id": "text", "label": "Story", "default": "Homeless to $15k+ a month running a cleaning business. Now with over 100k followers and featured in national news after sharing their journey with our community" },
+        { "type": "text", "id": "tag", "label": "Tag (yellow pill)", "default": "Maka twins" }
+      ]
+    },
+    {
+      "type": "check_item",
+      "name": "Checklist item",
+      "limit": 12,
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "No steeping" }
+      ]
+    },
+    {
+      "type": "compare_row",
+      "name": "Comparison row",
+      "limit": 12,
+      "settings": [
+        { "type": "text", "id": "label", "label": "Row label", "default": "Real Coffee Taste" },
+        { "type": "select", "id": "col_1", "label": "Dream Brew", "options": [{"value":"check","label":"✓"},{"value":"x","label":"✗"},{"value":"question","label":"?"}], "default": "check" },
+        { "type": "select", "id": "col_2", "label": "Coffee Shop",  "options": [{"value":"check","label":"✓"},{"value":"x","label":"✗"},{"value":"question","label":"?"}], "default": "check" },
+        { "type": "select", "id": "col_3", "label": "Budget Cans",  "options": [{"value":"check","label":"✓"},{"value":"x","label":"✗"},{"value":"question","label":"?"}], "default": "x" },
+        { "type": "select", "id": "col_4", "label": "Energy Drink", "options": [{"value":"check","label":"✓"},{"value":"x","label":"✗"},{"value":"question","label":"?"}], "default": "x" }
+      ]
+    },
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "limit": 20,
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "Is it sweet?" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>If you hate sugary coffee, this is built for you. If you like a touch of sweetness, DreamBrew is balanced but not a dessert in a can.</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "DreamBrew Page",
+      "blocks": [
+        { "type": "testimonial", "settings": { "title": "Successful Cleaning business", "text": "Homeless to $15k+ a month running a cleaning business. Now with over 100k followers and featured in national news after sharing their journey with our community", "tag": "Maka twins" } },
+        { "type": "testimonial", "settings": { "title": "Successful Custom Shoes", "text": "Waitress to $20k in funding and 100k followers. Thanks to HelpBnk, Daisy now runs her dream business making custom shoes and selling them online.", "tag": "Daisy" } },
+        { "type": "testimonial", "settings": { "title": "On to retail shelves", "text": "With support from HelpBnk, Natasha turned her dream into reality. Moving from her home kitchen to retail shelves with her Jamaican-style vegan patties.", "tag": "Vegan Patties" } },
+        { "type": "check_item", "settings": { "text": "No steeping" } },
+        { "type": "check_item", "settings": { "text": "No brewing gear" } },
+        { "type": "check_item", "settings": { "text": "No sugar guessing" } },
+        { "type": "check_item", "settings": { "text": "No watery disappointment" } },
+        { "type": "check_item", "settings": { "text": "No daily café tax" } },
+        { "type": "compare_row", "settings": { "label": "Real Coffee Taste",   "col_1": "check", "col_2": "check",    "col_3": "question", "col_4": "x" } },
+        { "type": "compare_row", "settings": { "label": "Balanced Sweetness",  "col_1": "check", "col_2": "question", "col_3": "x",        "col_4": "x" } },
+        { "type": "compare_row", "settings": { "label": "Creamy Texture",      "col_1": "check", "col_2": "check",    "col_3": "x",        "col_4": "x" } },
+        { "type": "compare_row", "settings": { "label": "Bitter Aftertaste",   "col_1": "x",     "col_2": "question", "col_3": "x",        "col_4": "x" } },
+        { "type": "compare_row", "settings": { "label": "Fridge-Ready",        "col_1": "check", "col_2": "x",        "col_3": "check",    "col_4": "check" } },
+        { "type": "compare_row", "settings": { "label": "Long-Term Value",     "col_1": "check", "col_2": "x",        "col_3": "check",    "col_4": "question" } },
+        { "type": "compare_row", "settings": { "label": "Funds dreams",        "col_1": "check", "col_2": "x",        "col_3": "x",        "col_4": "x" } },
+        { "type": "faq", "settings": { "question": "Is it sweet?",  "answer": "<p>If you hate sugary coffee, this is built for you. If you like a touch of sweetness, DreamBrew is balanced but not a dessert in a can.</p>" } },
+        { "type": "faq", "settings": { "question": "Is it strong?", "answer": "<p>It tastes like coffee. Not “iced milk with a hint of coffee.” DreamBrew isn't watery or bland.</p>" } },
+        { "type": "faq", "settings": { "question": "Is it good value?", "answer": "<p>If you're comparing to the cheapest supermarket own-brand, DreamBrew isn't trying to be that.</p><p>People feel weird about spending money on coffee. But they don't feel weird about £4 for a takeaway latte, £2.50 for a “premium” canned drink, or £3+ for an energy drink.</p><p>Dream Brew works out at only £1.66 per day (12 pack) — less than a coffee shop habit and way more enjoyable than a chemical-tasting energy drink.</p>" } },
+        { "type": "faq", "settings": { "question": "Will it upset my stomach?", "answer": "<p>Everyone's tolerance is different. We've focused on a smooth profile, no harsh bitterness, and transparent caffeine.</p>" } },
+        { "type": "faq", "settings": { "question": "Is it creamy?", "answer": "<p>Yes, without becoming heavy. Creamy mouthfeel is one of the things people love about coffee shops. We built DreamBrew so you can get that in a can at a fraction of the price.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

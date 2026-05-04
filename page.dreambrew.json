@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "page-dreambrew",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}
