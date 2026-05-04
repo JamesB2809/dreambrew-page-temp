@@ -27,6 +27,9 @@
     color: var(--db-brown);
     line-height: 1.4;
     overflow-x: hidden;
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
   }
   .db * { box-sizing: border-box; }
   .db__wrap { max-width: 600px; margin: 0 auto; padding: 0 16px; }
@@ -202,11 +205,6 @@
   /* Sticky add-to-cart helper hidden by default — can be unhidden with section setting */
   .db__sticky-cart { display: none; }
 
-  @media (min-width: 768px) {
-    .db__hero { padding: 80px 24px 32px; }
-    .db__cream-panel { padding: 96px 24px 80px; }
-    .db__cream-panel::before { inset: 32px -40px; }
-  }
 {% endstyle %}
 
 <div class="db" data-section-id="{{ section.id }}">
