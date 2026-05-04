@@ -40,10 +40,10 @@
   .db__banner img { height: 32px; width: auto; }
 
   /* Hero */
-  .db__hero { position: relative; padding: 56px 16px 24px; text-align: center; overflow: hidden; }
-  .db__hero-bg { position: absolute; left: 0; right: 0; top: 50%; bottom: 0; z-index: 0; pointer-events: none; }
-  .db__hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: bottom center; }
-  .db__hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, #fff 0%, rgba(255,255,255,0) 60%); }
+  .db__hero { position: relative; padding: 40px 16px 24px; text-align: center; overflow: hidden; min-height: 720px; }
+  .db__hero-bg { position: absolute; left: 0; right: 0; bottom: 0; height: 60%; z-index: 0; pointer-events: none; }
+  .db__hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: center bottom; display: block; }
+  .db__hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, #fff 0%, rgba(255,255,255,0) 40%); }
   .db__hero-inner { position: relative; z-index: 1; }
   .db__h1 { font-weight: 900; font-size: clamp(34px, 8vw, 48px); line-height: 1; letter-spacing: -0.04em; text-transform: uppercase; margin: 0 0 16px; }
   .db__h1 .accent { display: block; color: var(--db-pink); }
@@ -53,7 +53,8 @@
   /* Feature pills row */
   .db__features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 460px; margin: 0 auto 28px; }
   .db__feature { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; font-weight: 500; font-size: clamp(14px, 3.8vw, 18px); position: relative; padding-top: 6px; }
-  .db__feature-icon { width: 70px; height: 50px; display: block; background-size: contain; background-repeat: no-repeat; background-position: center; }
+  .db__feature-icon { width: 68px; height: 48px; display: block; background: var(--db-pink); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; }
+  .db__feature-icon--fallback { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 42 36'><path d='M3 4C3 1,5 1,8 1L34 1C37 1,39 3,39 6L39 24C39 30,33 35,21 35C9 35,3 30,3 24Z'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 42 36'><path d='M3 4C3 1,5 1,8 1L34 1C37 1,39 3,39 6L39 24C39 30,33 35,21 35C9 35,3 30,3 24Z'/></svg>"); }
 
   /* Big CTA pill */
   .db__cta { display: inline-flex; align-items: center; justify-content: center; width: 100%; max-width: 540px; min-height: 76px; padding: 18px 32px; border-radius: 999px; background: var(--db-pink); color: #fff; font-weight: 700; font-size: clamp(22px, 5vw, 30px); text-transform: uppercase; text-decoration: none; border: 2px solid var(--db-brown); box-shadow: 0 6px 6px rgba(0,0,0,0.09), 0 13px 8px rgba(0,0,0,0.05); transition: transform .15s ease; }
@@ -236,9 +237,9 @@
           {%- assign t = 'hero_feature_' | append: i | append: '_text' -%}
           <div class="db__feature">
             {% if section.settings.feature_icon != blank %}
-              <span class="db__feature-icon" style="background-image:url('{{ section.settings.feature_icon | image_url: width: 200 }}');"></span>
+              <span class="db__feature-icon" style="-webkit-mask-image:url('{{ section.settings.feature_icon | image_url: width: 200 }}');mask-image:url('{{ section.settings.feature_icon | image_url: width: 200 }}');"></span>
             {% else %}
-              <span class="db__feature-icon" style="background:#d24c7f;mask-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 42 36%22><path d=%22M3 4C3 1,5 1,8 1L34 1C37 1,39 3,39 6L39 24C39 30,33 35,21 35C9 35,3 30,3 24Z%22/></svg>');-webkit-mask-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 42 36%22><path d=%22M3 4C3 1,5 1,8 1L34 1C37 1,39 3,39 6L39 24C39 30,33 35,21 35C9 35,3 30,3 24Z%22/></svg>');mask-size:contain;-webkit-mask-size:contain;mask-repeat:no-repeat;-webkit-mask-repeat:no-repeat;"></span>
+              <span class="db__feature-icon db__feature-icon--fallback"></span>
             {% endif %}
             <span>{{ section.settings[t] }}</span>
           </div>
